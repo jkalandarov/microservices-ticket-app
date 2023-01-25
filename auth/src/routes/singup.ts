@@ -1,9 +1,11 @@
 import express, { Request, Response } from "express";
-const router = express.Router();
-import { User } from "../models/user";
+import jwt from 'jsonwebtoken';
 import { body, validationResult } from "express-validator";
 import { RequestValidationError } from "../errors/request-validation-error";
 import { BadRequestError } from "../errors/bad-request-error";
+import { User } from "../models/user";
+
+const router = express.Router();
 
 const bodyValidation = [
   body('email')
@@ -30,6 +32,18 @@ router.post('/api/users/signup', bodyValidation, async (req: Request, res: Respo
 
   const user = User.build({ email, password });
   await user.save();
+
+  const userJwt = jwt.sign(
+    {
+      id: user.id,
+      email: user.email
+    }, 
+    'qwerty'
+  );
+
+  req.session = { 
+    jwt: userJwt
+  };
 
   res.status(201).send(user);
 });
