@@ -40,7 +40,7 @@ router.post('/api/users/signin', bodyValidation, validateRequest, async (req: Re
   );
 
   req.session = { jwt: userJwt };
-  res.status(201).send(existingUser);
+  res.status(200).send(existingUser);
 });
 
 export { router as signinRouter }
