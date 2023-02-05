@@ -7,6 +7,10 @@ export default ({ url, method, body }) => {
   const doRequest = async () => {
     try {
       const response = await axios[method](url, body);
+      if(onSucess) {
+        onSucess(response.data);
+      }
+
       return response.data;
     } catch (err) {
       setErrors(
@@ -16,7 +20,7 @@ export default ({ url, method, body }) => {
             {err.response.data.errors.map(err => <li key={err.message}>{err.message}</li>)}
           </ul>
         </div>
-      )
+      );
     }
   }
 
