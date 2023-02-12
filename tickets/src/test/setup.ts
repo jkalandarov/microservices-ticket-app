@@ -29,14 +29,14 @@ afterAll(async () => {
 });
 
 global.signin = () => {
-  const payload = {
-    id: 'fs54fsd54',
-    email: 'test@test.com'
-  }
+ const payload = {
+  id: '1lk24j124l',
+  email: 'test@test.com',
+};
 
-  const token = jwt.sign(payload, process.env.JWT_KEY!);
-  const session = { jwt: token };
-  const sessionJSON = JSON.stringify(session);
-  const base64 = Buffer.from(sessionJSON).toString('base64');
-  return [`express:sess=${base64}`];
+const token = jwt.sign(payload, process.env.JWT_KEY!);
+const session = { jwt: token };
+const sessionJSON = JSON.stringify(session);
+const base64 = Buffer.from(sessionJSON).toString('base64');
+return [`express:sess=${base64}`];
 }
