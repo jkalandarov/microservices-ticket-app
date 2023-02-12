@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-interface TicketAttributes {
+interface TicketAttrs {
   title: string;
   price: number;
   userId: string;
@@ -13,34 +13,37 @@ interface TicketDoc extends mongoose.Document {
 }
 
 interface TicketModel extends mongoose.Model<TicketDoc> {
-  build(attributes: TicketAttributes): TicketDoc;
+  build(attrs: TicketAttrs): TicketDoc;
 }
 
-const ticketSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true
+const ticketSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    userId: {
+      type: String,
+      required: true,
+    },
   },
-  price: {
-    type: Number,
-    required: true
-  },
-  userId: {
-    type: String,
-    required: true
+  {
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+      },
+    },
   }
-}, {
-  toJSON: {
-    transform(doc, ret) {
-      ret.id = ret._id;
-      delete ret._id;
-    }
-  }
-});
+);
 
-ticketSchema.statics.build = (attributes: TicketAttributes) => {
-  return new Ticket(attributes);
-}
+ticketSchema.statics.build = (attrs: TicketAttrs) => {
+  return new Ticket(attrs);
+};
 
 const Ticket = mongoose.model<TicketDoc, TicketModel>('Ticket', ticketSchema);
 
