@@ -1,5 +1,6 @@
 import nats, { Message } from 'node-nats-streaming';
 import { randomBytes } from 'crypto';
+
 console.clear();
 
 const stan = nats.connect('ticketing', randomBytes(4).toString('hex'), {
@@ -8,6 +9,11 @@ const stan = nats.connect('ticketing', randomBytes(4).toString('hex'), {
 
 stan.on('connect', () => {
   console.log('Listener connected to NATS...');
+
+  stan.on('close', () => {
+    console.log('NATS connection closed...');
+    process.exit();
+  });
 
   const options = stan.subscriptionOptions().setManualAckMode(true);
   const subscription = stan.subscribe('ticket:created', 'orders-service-queue-group', options);
@@ -21,4 +27,7 @@ stan.on('connect', () => {
 
     msg.ack();
   });
-})
+});
+
+process.on('SIGINT', () => stan.close());
+process.on('SIGTERM', () => stan.close());
