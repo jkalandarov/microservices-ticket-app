@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { Ticket } from '../models/ticket';
+import { TicketUpdatedPublisher } from '../events/publishers/tickets-updated-publisher';
+import { nastWrapper } from '../nats-wrapper';
 import { 
   validateRequest, 
   NotFoundError, 
@@ -28,6 +30,13 @@ router.put('/api/tickets/:id', requireAuth, bodyValidation, validateRequest, asy
   });
 
   await ticket.save();
+  new TicketUpdatedPublisher(nastWrapper.client).publish({
+    id: ticket.id,
+    title: ticket.title,
+    userId: ticket.userId,
+    price: ticket.price,
+    version: 123
+  });
 
   res.send(ticket);
 });
