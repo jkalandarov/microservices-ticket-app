@@ -12,6 +12,15 @@ const start = async () => {
 
   try {
     await nastWrapper.connect('ticketing', 'asddf', 'http://nats-srv:4222');
+
+    nastWrapper.client.on('close', () => {
+      console.log('NATS connection closed...');
+      process.exit();
+    });
+
+    process.on('SIGINT', () => nastWrapper.client.close());
+    process.on('SIGTERM', () => nastWrapper.client.close());
+
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Connected to MongoDb');
   } catch (err) {
