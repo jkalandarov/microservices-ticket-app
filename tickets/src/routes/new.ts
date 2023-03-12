@@ -26,7 +26,7 @@ router.post(
       userId: req.currentUser!.id,
     });
     await ticket.save();
-    new TicketCreatedPublisher(nastWrapper.client).publish({
+    await new TicketCreatedPublisher(nastWrapper.client).publish({
       id: ticket.id,
       title: ticket.title,
       price: ticket.price,
