@@ -34,7 +34,7 @@ build:
         manual:
           - src: '**/*.ts'
             dest: .
-    - image: us.gcr.io/fair-expanse-322314/ordera
+    - image: us.gcr.io/fair-expanse-322314/orders
       context: orders
       docker:
         dockerfile: Dockerfile
